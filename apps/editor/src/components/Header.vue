@@ -6,6 +6,7 @@ import availableStyles from '@/config/styles';
 import getApiUrl from '@/utils/getApiUrl';
 import { computed, ref } from 'vue';
 import { useFullscreen } from '@vueuse/core';
+import { axios } from "axios";
 
 const { t } = useI18n();
 const store = useMainStore();
@@ -36,12 +37,11 @@ async function onDownload() {
   const file = URL.createObjectURL(blob);
   const timestamp = new Date().getTime();
 
-  const link = document.createElement('a');
-  link.href = file;
-  link.download = `${store.selectedStyleName}-${timestamp}.png`;
-  link.target = '_blank';
-  link.click();
-  link.remove();
+  // Send image to API
+  console.log(response.url)
+
+  axios.post("http://localhost:8080/usuario/save")
+
 
   URL.revokeObjectURL(file);
 }
@@ -52,54 +52,26 @@ function onFullscreen() {
 </script>
 
 <template>
-  <Dialog
-    v-model:visible="show"
-    modal
-    :draggable="false"
-    :header="t('downloadStarted')"
-    :style="{ maxWidth: '400px' }"
-  >
+  <Dialog v-model:visible="show" modal :draggable="false" :header="t('downloadStarted')" :style="{ maxWidth: '400px' }">
     <p class="header-dialog-text">{{ t('downloadStartedDescription') }}</p>
-    <p
-      v-if="styleMeta?.license?.name !== 'CC0 1.0'"
-      class="header-dialog-text"
-      v-html="
-        t('downloadStartedDescriptionLicense', {
-          title: styleMeta?.title,
-          source: styleMeta?.source,
-          creator: styleMeta?.creator,
-          homepage: styleMeta?.homepage,
-          licenseName: styleMeta?.license?.name,
-          licenseUrl: styleMeta?.license?.url,
-        })
-      "
-    ></p>
+    <p v-if="styleMeta?.license?.name !== 'CC0 1.0'" class="header-dialog-text" v-html="t('downloadStartedDescriptionLicense', {
+      title: styleMeta?.title,
+      source: styleMeta?.source,
+      creator: styleMeta?.creator,
+      homepage: styleMeta?.homepage,
+      licenseName: styleMeta?.license?.name,
+      licenseUrl: styleMeta?.license?.url,
+    })
+      "></p>
   </Dialog>
 
   <div class="header">
     <div class="header-actions">
-      <Button
-        icon="pi pi-sparkles"
-        severity="secondary"
-        rounded
-        :aria-label="t('shuffle')"
-        @click="onShuffle"
-      />
-      <Button
-        v-if="!isFullscreen"
-        icon="pi pi-window-maximize"
-        severity="secondary"
-        rounded
-        :aria-label="t('shuffle')"
-        @click="onFullscreen"
-      />
+      <Button icon="pi pi-sparkles" severity="secondary" rounded :aria-label="t('shuffle')" @click="onShuffle" />
+      <Button v-if="!isFullscreen" icon="pi pi-window-maximize" severity="secondary" rounded :aria-label="t('shuffle')"
+        @click="onFullscreen" />
     </div>
-    <Button
-      rounded
-      severity="secondary"
-      :label="t('save')"
-      @click="onDownload"
-    />
+    <Button rounded severity="secondary" :label="t('save')" @click="onDownload" />
   </div>
 </template>
 

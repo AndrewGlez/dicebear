@@ -59,6 +59,11 @@ const metaList = computed(() => {
         </a>
       </li>
       <li>
+        <a :href="t('cookiePolicyLink')" target="_blank">
+          {{ t('cookiePolicy') }}
+        </a>
+      </li>
+      <li>
         <a :href="t('siteNoticeLink')" target="_blank">
           {{ t('siteNotice') }}
         </a>

@@ -40,7 +40,6 @@ async function onDownload() {
   // Send image to API
   console.log(response.url)
 
-  axios.post("http://localhost:8080/usuario/save")
 
 
   URL.revokeObjectURL(file);

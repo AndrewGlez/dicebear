@@ -36,12 +36,15 @@ async function onDownload() {
   const file = URL.createObjectURL(blob);
   const timestamp = new Date().getTime();
 
-  const link = document.createElement('a');
-  link.href = file;
-  link.download = `${store.selectedStyleName}-${timestamp}.png`;
-  link.target = '_blank';
-  link.click();
-  link.remove();
+   await fetch("http://localhost:8080/usuarios/1", {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    avatar_url: response.url
+                }),
+              });
 
   URL.revokeObjectURL(file);
 }
